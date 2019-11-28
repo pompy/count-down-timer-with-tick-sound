@@ -1,0 +1,192 @@
+<html>
+<head>
+<title>Count Down Timer </title>
+<style>
+#timer-beep {
+  position: absolute;
+  top: -100000em;
+}
+body, html{font-family:Arial, Helvetica, sans-serif;background-color:black;color:white;}
+		
+		h1.heading{ font-size:4vw;margin-bottom:0;text-align:center;margin-top:0px;}
+		.timer{ text-align:center;font-size:33vw;font-weight: 900;vertical-align: top;margin-top: -4%;}
+		
+		.button{ text-decoration:none;font-size:1.5vw;padding:0.5em 1em 0.5em 1em;margin:0 auto;color:#fff;border-radius:0.3em;
+		text-shadow:0 1px #000;text-align:center;display:block;width:5em; min-width: 100px; min-height:20px;
+		font-size: 100%;
+		font-weight:bold;
+		
+		/* fallback */
+  background-color: #9e0601;
+  background-repeat: repeat-x;
+
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#9e0601), to(#fa0100));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(top, #fa0100, #9e0601);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(top, #fa0100, #9e0601);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(top, #fa0100, #9e0601);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(top, #fa0100, #9e0601);
+		}
+		
+		.button:hover {
+
+			/* fallback */
+  background-color: #9e0601;
+  background-repeat: repeat-x;
+
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#9e0601), to(#000));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(top, #fa0100, #000);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(top, #fa0100, #000);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(top, #fa0100, #000);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(top, #fa0100, #000);
+		
+		}
+		
+		.toggleicon {
+		 background: url(images/toggle.png) no-repeat;background-size: 25px 25px;height:25px;display:block;
+		}
+</style>
+</head>
+
+<body> 
+<h1 class="heading"> <a class="toggleicon" href="#" id="togglescreen" style="width:115px"></a>'Check your Count Down !!!'</h1>
+<div class="timer">
+	<span class="minutes">01</span>:<span class="seconds">00</span>
+</div>
+<audio id="timer-beep">
+   <source src="media/tiktak.mp3"/>
+</audio>
+<audio id="finish-beep">
+   <source src="media/buzzer.mp3"/>
+</audio>
+
+ <a class="button" href="#" id="restart">RESTART</a>
+
+
+<script src='js/jquery.min.js'></script>
+<script src='js/screenfull.js'></script>
+<!--
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script> 
+-->
+
+<script language="javascript">
+$.fn.timer = function( callback ) {
+	callback = callback || function() {};
+	return this.each(function() {
+		var $timer = $( this ),
+			$minutesEl = $timer.find( '.minutes' ),
+			$secondsEl = $timer.find( '.seconds' ),
+			interval = 1000,
+			timer = null,
+			start = 60,
+			minutesText = $minutesEl.text(),
+			minutes = ( minutesText[0] == '0' ) ? minutesText[1] : minutesText[0],
+			m = Number( minutes );
+			
+			timer = setInterval(function() {
+			
+				document.getElementById('timer-beep' ).play();
+				start--;
+		
+				if( start == 0 ) {
+					start = 60;
+					
+					$secondsEl.text( '00' );
+					
+					m--;
+					
+					if( m == 0 ) {
+						clearInterval( timer );
+						$minutesEl.text( '00' );
+						callback();
+						
+					}
+				} else {
+				
+					if( start >= 10 ) {
+				
+						$secondsEl.text( start.toString() );
+				
+					} else {
+				
+						$secondsEl.text( '0' + start.toString() );
+					
+				
+					}
+					if( minutes.length == 2 ) {
+						$minutesEl.text( m.toString() );
+					} else {
+					
+						if( m == 1 ) {
+						
+							$minutesEl.text( '00' );	
+						} 
+						else if( m == 0 ) {
+							
+							$minutesEl.text( '00' );	
+						} 
+						else {
+						var mvalue=m-1;
+							$minutesEl.text( '0' + mvalue.toString() );
+						}
+					}
+				
+				}
+			
+			}, interval);
+	
+	});
+
+};
+
+
+
+$(function() {
+	$( '#restart' ).click(function() {
+	location.reload();
+	//$( '#restart' ).css("display", "none");
+		
+	});
+	});
+	
+	
+$(function() {
+	$( '#togglescreen' ).click(function() {
+		 if (screenfull.enabled) {
+        // We can use `this` since we want the clicked element
+        screenfull.toggle();
+    }
+
+	});
+	});
+	
+	
+$(function() {
+	$( '.timer' ).timer(function() {
+		document.getElementById( 'finish-beep' ).play();
+		//$( '#restart' ).css("display", "block");
+	});
+
+});
+
+</script>
+
+</body>
+</html>
